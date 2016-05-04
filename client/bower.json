@@ -1,0 +1,30 @@
+{
+  "name": "client",
+  "description": "Angular, agenda online",
+  "main": "index.html",
+  "authors": [
+    "Francisco Retana"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Agenda",
+    "online"
+  ],
+  "homepage": "index.html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-animate": "1.5.0",
+    "angular-mocks": "1.5.0",
+    "angular": "1.5.0",
+    "angular-route": "1.5.0",
+    "bootstrap": "3.3.6",
+    "angular-resource": "1.5.0"
+  }
+}
