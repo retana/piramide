@@ -7,7 +7,7 @@ var connection = mysql.createConnection({
 });
 
 connection.connect();
-
+var jwt=require('jsonwebtoken');
 var usuario={
 	listar:function(req,res){
 		connection.query('Select * from usuario', function(err, rows) {
@@ -18,12 +18,14 @@ var usuario={
 		});
 	},
 	autenticar:function(req,res){
-		console.log(req.body.nick);
-		connection.query("Select * from usuario where usuario.correo='"+req.body.correo+"' and usuario.contrasena='"+req.body.contrasena+"'", function(err, rows) {
+		console.log(req.body.username+" "+req.body.password);
+		connection.query("Select * from usuario where usuario.correo='"+req.body.username+"' and usuario.contrasena='"+req.body.password+"'", function(err, rows) {
 			if (err) 
 				throw err;
 			else
-				res.json(rows);
+				if(rows[0].length>0)
+					console.log(genToken(rows[0]));
+					res.json(genToken(rows[0]));
 			}
 		);
 	},
@@ -34,7 +36,46 @@ var usuario={
 			else
 				res.json({mensaje:"El registro se añadio correctamente"});
 		});	
+	},
+	tokenGenerator:function(req,res){
+		var token=jwt.sign({company:'piramide'},'APP@agendaOnline');
+		res.send(token);
+	},
+	tokenMidleware:function(req,res,next){
+		var token=req.headers['x-access-token'] || req.body.token || req.query.token;
+		if(token){
+			jwt.verify(token,'APP@agendaOnline',function(err,decoded){
+				if(err){
+					return res.status(403).send({
+						success:false,
+						message:'Fallo al validar token'
+					});
+				}
+				req.user=decoded;
+				next();
+			});
+		}else{
+			return res.status(403).send({
+				success:false,
+				message:'No se proporciono token'
+			});
+		}
 	}
 }
-
+function expiresIn(dias){
+	var dateObj=new Date();
+	return dateObj.setDate(dateObj.getDate()+dias);
+}
+function genToken(user){
+	var payload=jwt.sign({
+			"company":"piramide"
+		},
+		'APP@agendaOnline');
+	var token={
+		"token":payload,
+		"user":user,
+		"exp": expiresIn(1)
+	}
+	return token;
+}
 module.exports=usuario;

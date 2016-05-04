@@ -10,16 +10,20 @@ app.controller('LoginController',['$scope','$window','$location','UserLoginFacto
         $scope.login= function () {
             var username=$scope.user.username,
             password=$scope.user.password;
+
             if(username!==undefined && password!==undefined){
                 UserLoginFactory.login(username,password).success(function(data){
-                    if(data.user.length){
+                    console.log(data);
+                    if(data.user){
                         AuthenticationFactory.isLogged=true;
-                        AuthenticationFactory.user=data.user[0].usuario;
-                        AuthenticationFactory.role=data.user[0].idRol;
+                        AuthenticationFactory.user=data.user.nombre;
+                        AuthenticationFactory.role=data.user.id_rol;
+                        AuthenticationFactory.idUser=data.user.id_usuario;
 
                         $window.sessionStorage.token=data.token;
-                        $window.sessionStorage.user=data.user[0].usuario;
-                        $window.sessionStorage.role=data.user[0].idRol;
+                        $window.sessionStorage.user=data.user.nombre;
+                        $window.sessionStorage.role=data.user.id_rol;
+                        $window.sessionStorage.idUser=data.user.id_usuario;
                         $location.path('/dashboard');
                     }else{
                         $location.path('/login');

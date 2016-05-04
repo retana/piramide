@@ -19,7 +19,7 @@ app.factory('AuthenticationFactory',function($window){
 app.factory("UserLoginFactory",function($window,$location,$http, AuthenticationFactory){
     return{
       login:function(username,password){
-            return $http.post("http://localhost:8085/api/v1/authenticate",{
+            return $http.post("http://localhost:8080/api/v1/usuario/autenticar",{
                 username:username,
                 password:password
             });

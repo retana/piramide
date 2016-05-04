@@ -3,7 +3,7 @@
  */
 var app=angular.module("app",['ngRoute']);
 app.config(function ($routeProvider, $httpProvider) {
-    //$httpProvider.interceptors.push("TokenInterceptorFactory");
+    $httpProvider.interceptors.push("TokenInterceptorFactory");
 
     $routeProvider
         .when('/login',{
